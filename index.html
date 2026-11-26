@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>개인정보 보호 습관 셀프 진단 (총 25문항)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans KR"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .radio-card {
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .radio-card:active {
+      transform: scale(0.98);
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background-color: #ffffff;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-900">
+
+  <!-- 상단 고정 헤더 & 진행률 바 -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-sm">
+          <i class="fa-solid fa-shield-halved text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight">개인정보 보호 습관 셀프 진단</h1>
+          <p class="text-[11px] sm:text-xs text-slate-500">총 25문항 · 현업 보안 점검 체크리스트</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span id="header-progress-text" class="text-xs sm:text-sm font-bold text-brand-600 bg-brand-50 px-2.5 py-1 rounded-full">
+          0 / 25
+        </span>
+        <button onclick="openInstructorView()" title="강사용 조직별 전체 현황 보기" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
+          <i class="fa-solid fa-chalkboard-user text-brand-400"></i>
+          <span class="hidden sm:inline">강사 대시보드</span>
+          <span class="sm:hidden">강사용</span>
+        </button>
+        <button onclick="openResetModal()" title="처음부터 다시하기" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+    </div>
+    <!-- 실시간 진행률 바 -->
+    <div class="w-full h-1.5 bg-slate-100 overflow-hidden">
+      <div id="progress-bar" class="h-full bg-brand-600 transition-all duration-300 ease-out" style="width: 0%;"></div>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="flex-1 w-full max-w-3xl mx-auto px-4 py-6 sm:py-8">
+
+    <!-- 1. 시작 안내 화면 (인트로) -->
+    <section id="intro-section" class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-10 text-center space-y-6">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 text-brand-700 text-xs sm:text-sm font-semibold">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span>개인정보 보호교육 사전 자가진단</span>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          나의 업무 속 개인정보 보호 습관,<br class="hidden sm:inline" /> 얼마나 안전할까요?
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
+          5개 핵심 영역(수집·동의, 이용·공유, 보관·접근통제, 파기·정리, 디지털 습관·사고 대응)의 25개 문항을 통해 평소 무심코 지나쳤던 보안 사각지대를 점검해 보세요.
+        </p>
+      </div>
+
+      <!-- 수강생 정보 입력 (조직명 & 이름/별명) -->
+      <div class="bg-brand-50/70 rounded-2xl p-4 sm:p-5 border border-brand-200/80 max-w-2xl mx-auto text-left space-y-3">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-bold text-brand-800 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-id-badge"></i>
+            <span>참여자 정보 입력 (강사 집계용)</span>
+          </p>
+          <span class="text-[11px] text-brand-600 font-medium">* 익명 참여 시 별명 입력</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="user-org-input" class="block text-xs font-bold text-slate-700 mb-1">소속 조직 / 부서명 <span class="text-rose-500">*</span></label>
+            <input id="user-org-input" type="text" placeholder="예: 인사팀, 마케팅본부, OO시청" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500" />
+          </div>
+          <div>
+            <label for="user-name-input" class="block text-xs font-bold text-slate-700 mb-1">이름 또는 별명 <span class="text-rose-500">*</span></label>
+            <input id="user-name-input" type="text" placeholder="예: 홍길동 또는 보안지킴이" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 응답 기준 안내 카드 -->
+      <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200/70 max-w-2xl mx-auto text-left">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">응답 점수 기준 (4지 선다 · 소요시간 약 3분)</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center justify-center gap-1">
+            <span class="text-sm font-bold text-emerald-600">전혀 안 한다</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">0점 (안전)</span>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center justify-center gap-1">
+            <span class="text-sm font-bold text-sky-600">드물게 한다</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">1점 (양호)</span>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center justify-center gap-1">
+            <span class="text-sm font-bold text-amber-600">가끔 한다</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">2점 (주의)</span>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center justify-center gap-1">
+            <span class="text-sm font-bold text-rose-600">자주·항상 한다</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">3점 (위험)</span>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 mt-3 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info text-brand-500"></i>
+          <span>합산 점수가 <strong>높을수록(최대 75점)</strong> 현업에서 개선이 필요한 위험 습관이 많다는 의미입니다.</span>
+        </p>
+      </div>
+
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button onclick="startQuiz()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-base shadow-lg shadow-brand-600/25 transition flex items-center justify-center gap-2">
+          <span>진단 시작하기</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <button onclick="fillDemoAnswers()" class="w-full sm:w-auto px-5 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-sm transition">
+          <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>샘플 응답으로 결과 미리보기
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. 문항 진행 화면 -->
+    <section id="quiz-section" class="hidden space-y-6">
+      <!-- 영역 탭 네비게이션 -->
+      <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto no-print">
+        <div id="category-tabs" class="grid grid-cols-5 gap-1.5 min-w-[460px]">
+          <!-- JS로 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 현재 영역 헤더 카드 -->
+      <div id="category-header" class="bg-gradient-to-r from-brand-900 to-brand-700 text-white rounded-3xl p-6 shadow-md">
+        <!-- JS로 렌더링 -->
+      </div>
+
+      <!-- 문항 리스트 컨테이너 -->
+      <div id="questions-container" class="space-y-4">
+        <!-- JS로 렌더링 -->
+      </div>
+
+      <!-- 하단 이전/다음/결과보기 버튼 -->
+      <div class="pt-4 pb-8 flex items-center justify-between gap-3">
+        <button id="prev-btn" onclick="changeStep(-1)" class="px-5 py-3.5 rounded-2xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm sm:text-base transition flex items-center gap-2 disabled:opacity-40 disabled:pointer-events-none">
+          <i class="fa-solid fa-chevron-left"></i>
+          <span>이전 영역</span>
+        </button>
+
+        <button id="next-btn" onclick="changeStep(1)" class="flex-1 sm:flex-initial px-8 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm sm:text-base shadow-md shadow-brand-600/20 transition flex items-center justify-center gap-2">
+          <span>다음 영역</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <button id="submit-btn" onclick="submitDiagnosis()" class="hidden flex-1 sm:flex-initial px-8 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm sm:text-base shadow-lg shadow-emerald-600/25 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>진단 결과 확인하기</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. 결과 리포트 화면 -->
+    <section id="result-section" class="hidden space-y-6 pb-10">
+      <!-- 총점 요약 배너 -->
+      <div id="result-summary-card" class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <!-- JS로 렌더링 -->
+      </div>
+
+      <!-- 5개 영역별 위험도 분석 차트 -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+          <div>
+            <h3 class="text-lg font-extrabold text-slate-900">영역별 위험도 분석 (각 15점 만점)</h3>
+            <p class="text-xs sm:text-sm text-slate-500">막대가 길고 붉을수록 강의 중 집중 점검이 필요한 영역입니다.</p>
+          </div>
+          <span id="highest-category-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 self-start sm:self-auto">
+            <!-- JS로 렌더링 -->
+          </span>
+        </div>
+
+        <div id="category-breakdown" class="space-y-4">
+          <!-- JS로 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 나만의 보안 리부트 선언 (취약 문항 점검 & 1가지 실천 약속) -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-5">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 bg-brand-50 px-2.5 py-1 rounded-lg">
+            <i class="fa-solid fa-bullseye"></i>
+            <span>강의 마무리 워크숍 활동</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 pt-1">내가 체크한 주의·위험 항목 & 오늘의 실천 약속</h3>
+          <p class="text-xs sm:text-sm text-slate-500">1점 이상 응답한 항목입니다. 오늘 강의 후 <strong>가장 먼저 바꿀 1가지 행동</strong>을 선택해 보세요.</p>
+        </div>
+
+        <div id="flagged-items-list" class="space-y-2.5">
+          <!-- JS로 렌더링 -->
+        </div>
+
+        <!-- 실천 다짐 입력 박스 -->
+        <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200 space-y-3">
+          <label for="action-pledge" class="block text-sm font-bold text-slate-800">
+            <i class="fa-solid fa-pen-to-square text-brand-600 mr-1.5"></i>나의 보안 리부트 한 줄 다짐
+          </label>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="action-pledge" type="text" placeholder="예: 오늘 퇴근 전 바탕화면의 고객 명단 엑셀 파일에 암호를 걸고 불필요한 파일은 파기하겠습니다." class="flex-1 px-4 py-3 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500" />
+            <button type="button" onclick="saveActionPledge()" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold transition shrink-0 flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>다짐 저장·전송</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 공유 및 재시도 버튼 -->
+      <div class="flex flex-col sm:flex-row items-center gap-3 no-print">
+        <button onclick="copyResultSummary()" class="w-full sm:flex-1 py-4 px-6 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm sm:text-base shadow-lg shadow-brand-600/20 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-copy"></i>
+          <span>진단 결과 & 다짐 복사하기 (채팅방 공유용)</span>
+        </button>
+        <button onclick="window.print()" class="w-full sm:w-auto py-4 px-5 rounded-2xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-print"></i>
+          <span>인쇄 / PDF 저장</span>
+        </button>
+        <button onclick="openResetModal()" class="w-full sm:w-auto py-4 px-5 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>다시 진단</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. 강사용 조직별 전체 현황 대시보드 -->
+    <section id="instructor-section" class="hidden space-y-6 pb-12">
+      <!-- 대시보드 상단 헤더 -->
+      <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-bold">
+              <i class="fa-solid fa-tower-broadcast animate-pulse"></i>
+              <span>실시간 강의 현장 모니터링</span>
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">강사용 조직별 진단 결과 대시보드</h2>
+            <p class="text-xs sm:text-sm text-slate-300">수강생이 진단을 완료하면 조직별 평균 점수와 취약 영역이 실시간으로 자동 집계됩니다.</p>
+          </div>
+          <button onclick="closeInstructorView()" class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 self-start sm:self-auto shrink-0">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>수강생 화면으로 돌아가기</span>
+          </button>
+        </div>
+
+        <!-- 조직 필터 & 관리 도구 바 -->
+        <div class="pt-2 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-2 flex-1">
+            <label for="org-filter-select" class="text-xs font-bold text-slate-300 shrink-0">
+              <i class="fa-solid fa-building mr-1"></i>조직 선택:
+            </label>
+            <select id="org-filter-select" onchange="renderInstructorDashboard()" class="flex-1 sm:max-w-xs px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <option value="ALL">전체 조직 보기</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="exportDashboardCSV()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-excel"></i>
+              <span>엑셀(CSV) 다운로드</span>
+            </button>
+            <button onclick="confirmClearAllSubmissions()" class="px-3.5 py-2 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-trash"></i>
+              <span>데이터 초기화</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 핵심 요약 KPI 카드 4개 -->
+      <div id="instructor-kpi-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- JS로 렌더링 -->
+      </div>
+
+      <!-- 조직별 비교 요약 테이블 (전체 보기일 때 강조) -->
+      <div id="org-comparison-card" class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-900">조직별 진단 현황 비교</h3>
+            <p class="text-xs text-slate-500">조직명을 클릭하면 해당 소속 수강생의 상세 목록만 필터링해 볼 수 있습니다.</p>
+          </div>
+        </div>
+        <div id="org-comparison-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- JS로 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 선택된 조직의 5대 영역 평균 위험도 -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900">영역별 평균 위험도 (15점 만점 기준)</h3>
+          <p class="text-xs text-slate-500">선택된 조직(또는 전체) 수강생들이 가장 취약한 영역을 파악해 강의 시간을 배분하세요.</p>
+        </div>
+        <div id="instructor-category-bars" class="space-y-3.5">
+          <!-- JS로 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 개별 참여자 목록 & 실천 다짐 현황 -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-900">참여자별 상세 결과 & 보안 리부트 다짐</h3>
+            <p class="text-xs text-slate-500">점수가 높은(주의가 필요한) 순서대로 정렬되어 표시됩니다.</p>
+          </div>
+          <span id="participant-count-badge" class="text-xs font-bold bg-slate-100 text-slate-700 px-3 py-1 rounded-full">0명</span>
+        </div>
+
+        <div id="participant-list-container" class="space-y-3">
+          <!-- JS로 렌더링 -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 커스텀 알림 토스트 메시지 -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-medium flex items-center gap-2.5 opacity-0 pointer-events-none transition-all duration-300 translate-y-4">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toast-message">알림 메시지</span>
+  </div>
+
+  <!-- Firebase 실시간 데이터 연동 스크립트 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // 환경 변수 기반 Firebase 초기화
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'privacy-diagnosis-default';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let unsubscribeSubmissions = null;
+
+    async function initCloudSync() {
+      try {
+        if (typeof __firebase_config === 'undefined') {
+          console.warn("Firebase 설정이 없어 로컬 메모리 모드로 동작합니다.");
+          return;
+        }
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // Rule 3: Auth Before Queries
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user;
+          if (user) {
+            subscribeToSubmissions();
+          }
+        });
+      } catch (err) {
+        console.error("클라우드 동기화 초기화 오류:", err);
+      }
+    }
+
+    // Rule 1 & Rule 2: 공용 컬렉션 경로 사용 및 단순 collection 구독 후 메모리 정렬
+    function subscribeToSubmissions() {
+      if (!db || !currentUser) return;
+      if (unsubscribeSubmissions) unsubscribeSubmissions();
+
+      const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'privacy_submissions');
+      unsubscribeSubmissions = onSnapshot(
+        colRef,
+        (snapshot) => {
+          const items = [];
+          snapshot.forEach((docSnap) => {
+            items.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          window.allSubmissions = items;
+          if (!document.getElementById('instructor-section').classList.contains('hidden')) {
+            window.renderInstructorDashboard();
+          }
+        },
+        (error) => {
+          console.error("실시간 데이터 수신 오류:", error);
+        }
+      );
+    }
+
+    // 전역 함수로 제출/수정/삭제 노출
+    window.saveSubmissionToCloud = async function(payload) {
+      // 로컬 상태에도 즉시 반영
+      const existingIdx = window.allSubmissions.findIndex(item => item.id === payload.id);
+      if (existingIdx >= 0) {
+        window.allSubmissions[existingIdx] = payload;
+      } else {
+        window.allSubmissions.push(payload);
+      }
+
+      if (!db || !currentUser) return;
+      try {
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'privacy_submissions', payload.id);
+        await setDoc(docRef, payload);
+      } catch (err) {
+        console.error("결과 저장 실패:", err);
+      }
+    };
+
+    window.deleteAllSubmissionsFromCloud = async function() {
+      const targetIds = window.allSubmissions.map(s => s.id);
+      window.allSubmissions = [];
+      if (typeof window.renderInstructorDashboard === 'function') {
+        window.renderInstructorDashboard();
+      }
+
+      if (!db || !currentUser) return;
+      try {
+        for (const id of targetIds) {
+          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'privacy_submissions', id);
+          await deleteDoc(docRef);
+        }
+      } catch (err) {
+        console.error("데이터 초기화 오류:", err);
+      }
+    };
+
+    initCloudSync();
+  </script>
+
+  <script>
+    // =========================================================================
+    // 1. 진단 데이터 정의 (5개 영역, 총 25문항)
+    // =========================================================================
+    const CATEGORIES = [
+      {
+        id: 0,
+        shortTitle: "1. 수집·동의",
+        title: "1단계: 수집·동의 습관 (1~5번)",
+        subtitle: "필요한 만큼만 최소한으로 수집하고, 제대로 동의를 받고 있는지 점검합니다.",
+        icon: "fa-file-signature",
+        questions: [
+          "업무에 당장 쓰지 않거나 목적을 명확히 정하지 않은 채, 이름·연락처·이메일·생년월일 등을 관행적으로 수집·보관한 적이 있다.",
+          "행사·설문·신청·상담 등에서 정보를 받을 때, '필수 동의'와 '선택 동의(마케팅·홍보 등)'를 구분하지 않고 한꺼번에 받은 적이 있다.",
+          "동의를 받을 때 '어디에, 얼마나 오래 쓰는지' 핵심 내용을 대충 넘기거나 서류·화면만 내밀고 동의를 구한 적이 있다.",
+          "법령상 예외나 별도 근거가 없는데도, '원래 다들 이렇게 받는다'는 이유로 불필요한 민감정보나 고유식별정보(주민등록번호·여권번호·운전면허번호 등)를 요구한 적이 있다.",
+          "기존에 수집한 개인정보를 원래 목적과 다른 업무나 새로운 이벤트에 활용하면서, 추가 동의나 별도 안내 절차를 생략한 적이 있다."
+        ]
+      },
+      {
+        id: 1,
+        shortTitle: "2. 이용·공유",
+        title: "2단계: 이용·공유·전달 습관 (6~10번)",
+        subtitle: "업무 위탁과 제3자 제공을 구분하고, 메일·메신저 발송 전 확인하는지 점검합니다.",
+        icon: "fa-paper-plane",
+        questions: [
+          "외부 업체나 유관기관·협업 파트너에게 명단이나 자료를 넘길 때, '업무 위탁'인지 '제3자 제공'인지 구분하지 않고 전달한 적이 있다.",
+          "동료나 다른 부서에서 요청하면, 내 업무와 무관하거나 열람 권한이 없는 개인정보를 별도 확인 없이 조회·전달해 준 적이 있다.",
+          "메일·메신저·협업툴·클라우드 링크로 개인정보가 든 파일을 보낼 때, 받는 사람이나 공유 범위를 한 번 더 확인하지 않고 발송한 적이 있다.",
+          "여러 명에게 단체 메일이나 문자·메시지를 보낼 때, 숨은참조가 아닌 일반 수신자·참조란에 다른 사람의 이메일이나 연락처를 노출한 적이 있다.",
+          "외부 미팅, 출장, 현장 행사 등에서 명단·상담일지·신청서 등을 챙겨 이동하면서 분실 위험에 대한 대비 없이 휴대한 적이 있다."
+        ]
+      },
+      {
+        id: 2,
+        shortTitle: "3. 보관·통제",
+        title: "3단계: 보관·열람·접근통제 습관 (11~15번)",
+        subtitle: "PC 파일 암호화, 화면 잠금, 출력물 및 계정 보안 관리를 점검합니다.",
+        icon: "fa-lock",
+        questions: [
+          "개인정보가 포함된 엑셀·한글·워드·PDF 파일을 암호 설정 없이 PC 바탕화면, 다운로드 폴더, 공용 폴더에 저장해 둔 적이 있다.",
+          "자리를 비우거나 퇴근할 때 화면 잠금(비밀번호·잠금화면)을 하지 않거나, 공용 PC·태블릿에서 계정 로그아웃을 잊은 적이 있다.",
+          "출력된 명단·신청서·계약서·상담 기록지 등을 책상 위나 프린터·복사기 주변에 그대로 둔 채 자리를 뜬 적이 있다.",
+          "서류함·캐비닛·보관함에 개인정보 문서를 넣을 때 잠금장치를 하지 않거나, 열쇠·비밀번호 관리를 허술하게 한 적이 있다.",
+          "개인정보 처리 시스템이나 파일에 접근할 수 있는 계정·비밀번호를 동료와 공유하거나, 주기적인 비밀번호 변경·권한 정리를 미룬 적이 있다."
+        ]
+      },
+      {
+        id: 3,
+        shortTitle: "4. 파기·정리",
+        title: "4단계: 파기·정리 습관 (16~20번)",
+        subtitle: "목적 달성 후 지체 없이 복구 불가능한 방법으로 파기하고 있는지 점검합니다.",
+        icon: "fa-trash-can",
+        questions: [
+          "행사·모집·상담·프로젝트가 끝났는데도, '나중에 참고할 일이 있을 것 같아서' 명단이나 파일을 지우지 않고 그대로 둔 적이 있다.",
+          "법령이나 내부 규정에 정해진 보유·이용 기간이 지났음에도, 정기적인 삭제·파기 일정을 챙기지 않고 방치한 적이 있다.",
+          "종이 문서를 버릴 때 세절기·파쇄 등 복구 불가능한 방법을 쓰지 않고, 구겨서 휴지통·재활용품에 그대로 버린 적이 있다.",
+          "파일이나 데이터를 지울 때 휴지통을 비우지 않거나, 백업본·임시파일·메일 첨부파일·메신저 대화방에 남은 사본을 방치한 적이 있다.",
+          "쓰지 않게 된 PC·노트북·외장하드·USB·스마트폰 등을 처분하거나 반납·재활용할 때, 저장된 개인정보를 완전히 삭제·초기화하지 않은 적이 있다."
+        ]
+      },
+      {
+        id: 4,
+        shortTitle: "5. 디지털·대응",
+        title: "5단계: 디지털 습관·인식·사고 대응 (21~25번)",
+        subtitle: "생성형 AI 사용, 개인 클라우드 반출, 유출 징후 발생 시 보고 태도를 점검합니다.",
+        icon: "fa-robot",
+        questions: [
+          "업무용 개인정보 파일이나 고객·회원 데이터를 개인 메일, 개인 클라우드, 개인 메신저, 개인 USB 등으로 옮긴 적이 있다.",
+          "생성형 AI 도구나 외부 웹서비스·온라인 폼에 실명·연락처·계정·상담 내용 등 개인정보가 포함된 텍스트나 파일을 입력한 적이 있다.",
+          "'우리 조직은 규모가 작아서(또는 비영리·내부용이라서) 개인정보보호법과 크게 상관없다'고 생각한 적이 있다.",
+          "'개인정보처리방침이나 동의서만 갖추면 이후 관리나 파기까지 세세하게 신경 쓰지 않아도 된다'고 여긴 적이 있다.",
+          "오발송·분실·열람 오류 등 아찔한 유출 징후를 겪고도, 불이익이나 질책이 걱정되어 담당자·부서 보고 절차를 밟지 않고 혼자 덮으려 한 적이 있다."
+        ]
+      }
+    ];
+
+    const OPTIONS = [
+      { score: 0, label: "전혀 안 한다", badge: "0점", activeClass: "border-emerald-500 bg-emerald-50/90 text-emerald-900 ring-2 ring-emerald-500/30" },
+      { score: 1, label: "드물게 한다", badge: "1점", activeClass: "border-sky-500 bg-sky-50/90 text-sky-900 ring-2 ring-sky-500/30" },
+      { score: 2, label: "가끔 한다", badge: "2점", activeClass: "border-amber-500 bg-amber-50/90 text-amber-900 ring-2 ring-amber-500/30" },
+      { score: 3, label: "자주·항상 한다", badge: "3점", activeClass: "border-rose-500 bg-rose-50/90 text-rose-900 ring-2 ring-rose-500/30" }
+    ];
+
+    // =========================================================================
+    // 2. 애플리케이션 상태 관리
+    // =========================================================================
+    let currentStep = 0; // 0 ~ 4 (5개 영역)
+    let answers = new Array(25).fill(null); // 0~24번 문항 응답 저장
+    let selectedFocusQuestion = null; // 마무리 활동용 선택한 개선 문항 번호 (1~25)
+    let userOrg = "";
+    let userName = "";
+    let currentSubmissionId = crypto.randomUUID();
+    let previousActiveSection = "intro-section";
+    window.allSubmissions = []; // 강사용 대시보드 실시간 집계 목록
+
+    // =========================================================================
+    // 3. 화면 전환 및 렌더링 함수
+    // =========================================================================
+    function startQuiz() {
+      const orgInput = document.getElementById('user-org-input').value.trim();
+      const nameInput = document.getElementById('user-name-input').value.trim();
+
+      if (!orgInput || !nameInput) {
+        showToast("소속 조직명과 이름(또는 별명)을 모두 입력해 주세요.");
+        if (!orgInput) {
+          document.getElementById('user-org-input').focus();
+        } else {
+          document.getElementById('user-name-input').focus();
+        }
+        return;
+      }
+
+      userOrg = orgInput;
+      userName = nameInput;
+      currentSubmissionId = crypto.randomUUID();
+
+      document.getElementById('intro-section').classList.add('hidden');
+      document.getElementById('result-section').classList.add('hidden');
+      document.getElementById('instructor-section').classList.add('hidden');
+      document.getElementById('quiz-section').classList.remove('hidden');
+      currentStep = 0;
+      renderStep();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderStep() {
+      const category = CATEGORIES[currentStep];
+      renderTabs();
+
+      // 영역 헤더 업데이트
+      const headerEl = document.getElementById('category-header');
+      headerEl.innerHTML = `
+        <div class="flex items-start justify-between gap-4">
+          <div class="space-y-1.5">
+            <span class="inline-block px-2.5 py-0.5 rounded-full bg-white/15 text-xs font-semibold tracking-wide">
+              STEP ${currentStep + 1} OF 5
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">${category.title}</h2>
+            <p class="text-xs sm:text-sm text-brand-100 leading-relaxed">${category.subtitle}</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center shrink-0 text-xl">
+            <i class="fa-solid ${category.icon}"></i>
+          </div>
+        </div>
+      `;
+
+      // 문항 카드 렌더링
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      category.questions.forEach((qText, idx) => {
+        const globalIndex = currentStep * 5 + idx; // 0 ~ 24
+        const qNumber = globalIndex + 1; // 1 ~ 25
+        const currentVal = answers[globalIndex];
+
+        const card = document.createElement('div');
+        card.id = `question-card-${globalIndex}`;
+        card.className = `bg-white rounded-3xl p-5 sm:p-6 border transition-all ${
+          currentVal !== null ? 'border-slate-200 shadow-xs' : 'border-slate-200/90 shadow-sm'
+        }`;
+
+        const optionsHtml = OPTIONS.map(opt => {
+          const isSelected = currentVal === opt.score;
+          return `
+            <button
+              type="button"
+              onclick="selectAnswer(${globalIndex}, ${opt.score})"
+              class="radio-card flex items-center justify-between sm:justify-center gap-2 px-4 py-3.5 rounded-2xl border text-left sm:text-center font-semibold text-sm cursor-pointer ${
+                isSelected
+                  ? opt.activeClass
+                  : 'border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-slate-100 hover:border-slate-300'
+              }"
+            >
+              <span>${opt.label}</span>
+              <span class="text-xs px-2 py-0.5 rounded-md ${
+                isSelected ? 'bg-white/80 font-bold' : 'bg-slate-200/70 text-slate-500'
+              }">${opt.badge}</span>
+            </button>
+          `;
+        }).join('');
+
+        card.innerHTML = `
+          <div class="flex items-start gap-3.5 mb-4">
+            <span class="w-7 h-7 rounded-xl ${
+              currentVal !== null ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600'
+            } font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 transition-colors">
+              ${qNumber}
+            </span>
+            <p class="text-sm sm:text-base font-semibold text-slate-800 leading-relaxed">
+              ${qText}
+            </p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pl-0 sm:pl-10">
+            ${optionsHtml}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // 하단 버튼 상태 업데이트
+      document.getElementById('prev-btn').disabled = currentStep === 0;
+      if (currentStep === CATEGORIES.length - 1) {
+        document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('submit-btn').classList.remove('hidden');
+      } else {
+        document.getElementById('next-btn').classList.remove('hidden');
+        document.getElementById('submit-btn').classList.add('hidden');
+      }
+
+      updateProgress();
+    }
+
+    function renderTabs() {
+      const tabsEl = document.getElementById('category-tabs');
+      tabsEl.innerHTML = CATEGORIES.map((cat, idx) => {
+        const startIdx = idx * 5;
+        const answeredCount = answers.slice(startIdx, startIdx + 5).filter(v => v !== null).length;
+        const isCurrent = idx === currentStep;
+        const isDone = answeredCount === 5;
+
+        return `
+          <button
+            type="button"
+            onclick="goToStep(${idx})"
+            class="px-2.5 py-2 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center gap-0.5 ${
+              isCurrent
+                ? 'bg-brand-600 text-white shadow-xs'
+                : isDone
+                  ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                  : 'text-slate-500 hover:bg-slate-100'
+            }"
+          >
+            <span class="truncate max-w-full">${cat.shortTitle}</span>
+            <span class="text-[10px] opacity-80">${answeredCount}/5</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectAnswer(globalIndex, score) {
+      answers[globalIndex] = score;
+      renderStep();
+
+      // 현재 영역의 5문항을 모두 채웠을 때 안내 토스트 표시
+      const startIdx = currentStep * 5;
+      const stepComplete = answers.slice(startIdx, startIdx + 5).every(v => v !== null);
+      if (stepComplete && currentStep < CATEGORIES.length - 1) {
+        showToast(`${currentStep + 1}단계 완료! '다음 영역' 버튼을 눌러주세요.`);
+      }
+    }
+
+    function goToStep(stepIdx) {
+      currentStep = stepIdx;
+      renderStep();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function changeStep(delta) {
+      const nextStep = currentStep + delta;
+      if (nextStep >= 0 && nextStep < CATEGORIES.length) {
+        currentStep = nextStep;
+        renderStep();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function updateProgress() {
+      const answeredTotal = answers.filter(v => v !== null).length;
+      const percent = Math.round((answeredTotal / 25) * 100);
+      document.getElementById('header-progress-text').textContent = `${answeredTotal} / 25`;
+      document.getElementById('progress-bar').style.width = `${percent}%`;
+    }
+
+    // =========================================================================
+    // 4. 결과 계산 및 리포트 렌더링
+    // =========================================================================
+    function submitDiagnosis() {
+      const unansweredIndices = answers
+        .map((val, idx) => (val === null ? idx : -1))
+        .filter(idx => idx !== -1);
+
+      if (unansweredIndices.length > 0) {
+        const firstMissing = unansweredIndices[0];
+        const targetStep = Math.floor(firstMissing / 5);
+        showModal({
+          icon: "fa-list-check",
+          title: `아직 응답하지 않은 문항이 ${unansweredIndices.length}개 있습니다`,
+          desc: `가장 먼저 빠진 ${firstMissing + 1}번 문항으로 이동할까요?`,
+          buttons: [
+            { text: "취소", style: "secondary", action: closeModal },
+            {
+              text: `${firstMissing + 1}번 문항으로 이동`,
+              style: "primary",
+              action: () => {
+                closeModal();
+                currentStep = targetStep;
+                renderStep();
+                setTimeout(() => {
+                  const el = document.getElementById(`question-card-${firstMissing}`);
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('ring-2', 'ring-amber-400');
+                  }
+                }, 100);
+              }
+            }
+          ]
+        });
+        return;
+      }
+
+      renderResults();
+    }
+
+    function renderResults() {
+      document.getElementById('quiz-section').classList.add('hidden');
+      document.getElementById('intro-section').classList.add('hidden');
+      document.getElementById('instructor-section').classList.add('hidden');
+      document.getElementById('result-section').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      const totalScore = answers.reduce((acc, cur) => acc + cur, 0);
+      const displayOrg = userOrg || "미지정 조직";
+      const displayName = userName || "익명 참여자";
+
+      // 점수 구간 판정 (0~15 / 16~38 / 39~75)
+      let grade = {};
+      if (totalScore <= 15) {
+        grade = {
+          badge: "안전 습관 우수형",
+          colorClass: "from-emerald-600 to-teal-600",
+          pillBg: "bg-emerald-50 text-emerald-700 border-emerald-200",
+          icon: "fa-shield-check",
+          title: "기본 보호 수칙을 아주 잘 실천하고 계십니다!",
+          desc: "익숙함에서 오는 방심을 막기 위해, 오늘 강의에서는 실무 예외 상황과 최신 AI·유출 사례를 중심으로 점검해 보세요."
+        };
+      } else if (totalScore <= 38) {
+        grade = {
+          badge: "습관 점검·교정 필요형",
+          colorClass: "from-amber-500 to-orange-600",
+          pillBg: "bg-amber-50 text-amber-800 border-amber-200",
+          icon: "fa-triangle-exclamation",
+          title: "업무 속도를 내다 생기는 '편의주의 습관'이 포착됩니다.",
+          desc: "악의는 없지만 무심코 넘긴 행동이 사고의 씨앗이 될 수 있습니다. 오늘 강의에서 당장 바꿀 행동 1~2가지를 정해 실천해 보세요."
+        };
+      } else {
+        grade = {
+          badge: "실수 위험 집중 관리형",
+          colorClass: "from-rose-600 to-red-700",
+          pillBg: "bg-rose-50 text-rose-700 border-rose-200",
+          icon: "fa-bell",
+          title: "현장에서 유출·오발송 사고로 이어질 위험 신호가 높습니다.",
+          desc: "여러 영역에서 위험 습관이 동시에 나타났습니다. 강의 직후 내 PC 바탕화면 파일 암호화와 불필요한 명단 파기부터 바로 시작해 보세요."
+        };
+      }
+
+      // 총점 카드 렌더링
+      document.getElementById('result-summary-card').innerHTML = `
+        <div class="bg-gradient-to-r ${grade.colorClass} p-6 sm:p-8 text-white">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-bold">
+                  <i class="fa-solid ${grade.icon}"></i>
+                  <span>${grade.badge}</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/20 text-xs font-semibold">
+                  <i class="fa-solid fa-user"></i>
+                  <span>${escapeHtml(displayOrg)} · ${escapeHtml(displayName)}</span>
+                </span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-extrabold leading-snug">${grade.title}</h2>
+            </div>
+            <div class="bg-white/15 backdrop-blur-xs rounded-2xl px-6 py-4 text-center shrink-0">
+              <p class="text-xs font-semibold opacity-90">나의 위험도 총점</p>
+              <p class="text-3xl sm:text-4xl font-black tracking-tight mt-0.5">
+                ${totalScore}<span class="text-base font-bold opacity-80"> / 75점</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 sm:px-8 sm:py-5 bg-white text-sm sm:text-base text-slate-600 leading-relaxed">
+          ${grade.desc}
+        </div>
+      `;
+
+      // 영역별 점수 계산
+      const categoryScores = CATEGORIES.map((cat, idx) => {
+        const slice = answers.slice(idx * 5, idx * 5 + 5);
+        const sum = slice.reduce((a, b) => a + b, 0);
+        return { ...cat, score: sum };
+      });
+
+      const maxCatScore = Math.max(...categoryScores.map(c => c.score));
+      const topWeakCats = categoryScores.filter(c => c.score === maxCatScore && maxCatScore > 0);
+      const highestBadge = document.getElementById('highest-category-badge');
+      if (topWeakCats.length > 0) {
+        highestBadge.innerHTML = `<i class="fa-solid fa-fire"></i><span>중점 보완 영역: ${topWeakCats.map(c => c.shortTitle).join(', ')}</span>`;
+      } else {
+        highestBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700";
+        highestBadge.innerHTML = `<i class="fa-solid fa-star"></i><span>전 영역 무결점!</span>`;
+      }
+
+      // 영역별 바 차트 렌더링 (각 영역 15점 만점)
+      const breakdownEl = document.getElementById('category-breakdown');
+      breakdownEl.innerHTML = categoryScores.map(cat => {
+        const pct = (cat.score / 15) * 100;
+        let barColor = "bg-emerald-500";
+        let statusText = "양호";
+        let textCol = "text-emerald-600";
+
+        if (cat.score >= 9) {
+          barColor = "bg-rose-500";
+          statusText = "주의 필요";
+          textCol = "text-rose-600";
+        } else if (cat.score >= 4) {
+          barColor = "bg-amber-500";
+          statusText = "점검 권장";
+          textCol = "text-amber-600";
+        }
+
+        return `
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="font-bold text-slate-800">${cat.title}</span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold ${textCol}">${statusText}</span>
+                <span class="font-extrabold text-slate-900">${cat.score} <span class="text-slate-400 font-normal">/ 15점</span></span>
+              </div>
+            </div>
+            <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full ${barColor} rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 주의·위험 체크 문항(1점 이상) 목록 렌더링
+      renderFlaggedItems();
+
+      // 강사용 대시보드 실시간 집계 저장
+      syncCurrentResultToCloud(totalScore, categoryScores.map(c => c.score));
+    }
+
+    function syncCurrentResultToCloud(totalScore, catScoresArray) {
+      if (typeof window.saveSubmissionToCloud !== 'function') return;
+      const pledgeVal = document.getElementById('action-pledge').value.trim();
+      const payload = {
+        id: currentSubmissionId,
+        org: userOrg || "미지정 조직",
+        name: userName || "익명 참여자",
+        totalScore: totalScore,
+        categoryScores: catScoresArray,
+        focusQuestion: selectedFocusQuestion,
+        pledge: pledgeVal,
+        updatedAt: Date.now()
+      };
+      window.saveSubmissionToCloud(payload);
+    }
+
+    function saveActionPledge() {
+      const pledgeVal = document.getElementById('action-pledge').value.trim();
+      if (!pledgeVal) {
+        showToast("실천 다짐 문구를 먼저 입력해 주세요.");
+        document.getElementById('action-pledge').focus();
+        return;
+      }
+      const totalScore = answers.reduce((acc, cur) => acc + (cur || 0), 0);
+      const catScoresArray = CATEGORIES.map((_, idx) =>
+        answers.slice(idx * 5, idx * 5 + 5).reduce((a, b) => a + (b || 0), 0)
+      );
+      syncCurrentResultToCloud(totalScore, catScoresArray);
+      showToast("나의 보안 리부트 다짐이 강사 대시보드에 전송되었습니다!");
+    }
+
+    function renderFlaggedItems() {
+      const listEl = document.getElementById('flagged-items-list');
+      const flagged = [];
+
+      answers.forEach((score, idx) => {
+        if (score >= 1) {
+          const catIdx = Math.floor(idx / 5);
+          const qIdx = idx % 5;
+          flagged.push({
+            qNumber: idx + 1,
+            score,
+            category: CATEGORIES[catIdx].shortTitle,
+            text: CATEGORIES[catIdx].questions[qIdx]
+          });
+        }
+      });
+
+      // 점수가 높은(2점) 문항 우선 정렬
+      flagged.sort((a, b) => b.score - a.score || a.qNumber - b.qNumber);
+
+      if (flagged.length === 0) {
+        listEl.innerHTML = `
+          <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-xl text-emerald-600"></i>
+            <span>25개 모든 문항에서 '전혀 안 한다(0점)'를 선택하셨습니다! 현재의 모범적인 보안 습관을 꾸준히 유지해 주세요.</span>
+          </div>
+        `;
+        return;
+      }
+
+      if (selectedFocusQuestion === null) {
+        selectedFocusQuestion = flagged[0].qNumber;
+      }
+
+      listEl.innerHTML = flagged.map(item => {
+        const isFocus = selectedFocusQuestion === item.qNumber;
+        const badgeStyle = item.score === 3
+          ? "bg-rose-100 text-rose-700"
+          : item.score === 2
+            ? "bg-amber-100 text-amber-800"
+            : "bg-sky-100 text-sky-700";
+        const badgeLabel = item.score === 3
+          ? "자주·항상 (3점)"
+          : item.score === 2
+            ? "가끔 (2점)"
+            : "드물게 (1점)";
+
+        return `
+          <div
+            onclick="selectFocusItem(${item.qNumber})"
+            class="p-4 rounded-2xl border transition cursor-pointer flex items-start gap-3 ${
+              isFocus
+                ? 'border-brand-500 bg-brand-50/50 ring-2 ring-brand-500/20'
+                : 'border-slate-200 hover:bg-slate-50'
+            }"
+          >
+            <div class="mt-0.5 shrink-0">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                isFocus ? 'bg-brand-600 text-white' : 'bg-slate-200 text-slate-600'
+              }">
+                ${isFocus ? '<i class="fa-solid fa-check"></i>' : item.qNumber}
+              </span>
+            </div>
+            <div class="flex-1 space-y-1">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-xs font-bold text-slate-500">${item.qNumber}번 · ${item.category}</span>
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-md ${badgeStyle}">${badgeLabel}</span>
+                ${isFocus ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-brand-600 text-white">중점 개선 목표</span>' : ''}
+              </div>
+              <p class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">${item.text}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectFocusItem(qNumber) {
+      selectedFocusQuestion = qNumber;
+      renderFlaggedItems();
+      const totalScore = answers.reduce((acc, cur) => acc + (cur || 0), 0);
+      const catScoresArray = CATEGORIES.map((_, idx) =>
+        answers.slice(idx * 5, idx * 5 + 5).reduce((a, b) => a + (b || 0), 0)
+      );
+      syncCurrentResultToCloud(totalScore, catScoresArray);
+      showToast(`${qNumber}번 문항을 오늘의 최우선 개선 목표로 선택했습니다.`);
+    }
+
+    // =========================================================================
+    // 5. 강사용 조직별 전체 현황 대시보드 로직
+    // =========================================================================
+    function openInstructorView() {
+      const sections = ['intro-section', 'quiz-section', 'result-section'];
+      for (const secId of sections) {
+        if (!document.getElementById(secId).classList.contains('hidden')) {
+          previousActiveSection = secId;
+        }
+        document.getElementById(secId).classList.add('hidden');
+      }
+      document.getElementById('instructor-section').classList.remove('hidden');
+      renderInstructorDashboard();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function closeInstructorView() {
+      document.getElementById('instructor-section').classList.add('hidden');
+      document.getElementById(previousActiveSection || 'intro-section').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectOrgFilter(orgName) {
+      const selectEl = document.getElementById('org-filter-select');
+      selectEl.value = orgName;
+      renderInstructorDashboard();
+    }
+
+    window.renderInstructorDashboard = function() {
+      const allData = Array.isArray(window.allSubmissions) ? window.allSubmissions : [];
+      const selectEl = document.getElementById('org-filter-select');
+      const prevSelectedOrg = selectEl.value || 'ALL';
+
+      // 조직 목록 추출 및 셀렉트 박스 갱신
+      const orgSet = new Set(allData.map(item => (item.org || '미지정 조직').trim()));
+      const orgList = Array.from(orgSet).sort((a, b) => a.localeCompare(b, 'ko'));
+
+      selectEl.innerHTML = `<option value="ALL">전체 조직 보기 (${allData.length}명)</option>` +
+        orgList.map(org => {
+          const count = allData.filter(d => (d.org || '미지정 조직').trim() === org).length;
+          return `<option value="${escapeHtml(org)}">${escapeHtml(org)} (${count}명)</option>`;
+        }).join('');
+
+      if (prevSelectedOrg === 'ALL' || orgList.includes(prevSelectedOrg)) {
+        selectEl.value = prevSelectedOrg;
+      } else {
+        selectEl.value = 'ALL';
+      }
+
+      const activeOrg = selectEl.value;
+      const filteredData = activeOrg === 'ALL'
+        ? allData
+        : allData.filter(d => (d.org || '미지정 조직').trim() === activeOrg);
+
+      // KPI 계산
+      const totalParticipants = filteredData.length;
+      const avgTotalScore = totalParticipants > 0
+        ? (filteredData.reduce((acc, cur) => acc + (cur.totalScore || 0), 0) / totalParticipants).toFixed(1)
+        : "0.0";
+      const highRiskCount = filteredData.filter(d => (d.totalScore || 0) >= 39).length;
+      const safeCount = filteredData.filter(d => (d.totalScore || 0) <= 15).length;
+
+      document.getElementById('instructor-kpi-grid').innerHTML = `
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs">
+          <p class="text-xs font-bold text-slate-500">참여 인원</p>
+          <p class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">${totalParticipants}<span class="text-sm font-bold text-slate-400 ml-1">명</span></p>
+          <p class="text-[11px] text-slate-400 mt-1">${activeOrg === 'ALL' ? `총 ${orgList.length}개 조직 참여` : escapeHtml(activeOrg)}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs">
+          <p class="text-xs font-bold text-slate-500">평균 위험도 점수</p>
+          <p class="text-2xl sm:text-3xl font-black text-brand-600 mt-1">${avgTotalScore}<span class="text-sm font-bold text-slate-400 ml-1">/ 75점</span></p>
+          <p class="text-[11px] text-slate-400 mt-1">낮을수록 보안 습관 양호</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs">
+          <p class="text-xs font-bold text-slate-500">집중 관리군 (39점↑)</p>
+          <p class="text-2xl sm:text-3xl font-black text-rose-600 mt-1">${highRiskCount}<span class="text-sm font-bold text-slate-400 ml-1">명</span></p>
+          <p class="text-[11px] text-rose-500 mt-1">실무 사고 주의 대상</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs">
+          <p class="text-xs font-bold text-slate-500">안전 우수군 (15점↓)</p>
+          <p class="text-2xl sm:text-3xl font-black text-emerald-600 mt-1">${safeCount}<span class="text-sm font-bold text-slate-400 ml-1">명</span></p>
+          <p class="text-[11px] text-emerald-600 mt-1">기본 수칙 모범 실천</p>
+        </div>
+      `;
+
+      // 조직별 비교 카드 렌더링
+      const orgCompCard = document.getElementById('org-comparison-card');
+      const orgCompList = document.getElementById('org-comparison-list');
+      if (orgList.length === 0) {
+        orgCompList.innerHTML = `
+          <div class="col-span-full py-8 text-center text-sm text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            아직 제출된 진단 결과가 없습니다. 수강생이 진단을 완료하면 조직별 현황이 자동으로 나타납니다.
+          </div>
+        `;
+      } else {
+        orgCompCard.classList.remove('hidden');
+        orgCompList.innerHTML = orgList.map(org => {
+          const members = allData.filter(d => (d.org || '미지정 조직').trim() === org);
+          const avg = (members.reduce((a, b) => a + (b.totalScore || 0), 0) / members.length).toFixed(1);
+          const isSelected = activeOrg === org;
+          let badgeColor = "bg-emerald-100 text-emerald-700";
+          if (avg >= 39) badgeColor = "bg-rose-100 text-rose-700";
+          else if (avg >= 16) badgeColor = "bg-amber-100 text-amber-800";
+
+          return `
+            <button
+              type="button"
+              onclick="selectOrgFilter('${org.replace(/'/g, "\\'")}')"
+              class="p-4 rounded-2xl border text-left transition flex items-center justify-between gap-3 ${
+                isSelected
+                  ? 'border-brand-600 bg-brand-50/60 ring-2 ring-brand-500/20'
+                  : 'border-slate-200 hover:bg-slate-50'
+              }"
+            >
+              <div>
+                <p class="font-extrabold text-slate-900 text-sm sm:text-base">${escapeHtml(org)}</p>
+                <p class="text-xs text-slate-500 mt-0.5">참여 인원: <strong>${members.length}명</strong></p>
+              </div>
+              <div class="text-right">
+                <span class="inline-block px-2.5 py-1 rounded-lg text-xs font-extrabold ${badgeColor}">
+                  평균 ${avg}점
+                </span>
+              </div>
+            </button>
+          `;
+        }).join('');
+      }
+
+      // 선택된 조직의 5대 영역별 평균 위험도 막대 그래프
+      const catBarsEl = document.getElementById('instructor-category-bars');
+      catBarsEl.innerHTML = CATEGORIES.map((cat, idx) => {
+        const avgCat = totalParticipants > 0
+          ? (filteredData.reduce((acc, cur) => acc + ((cur.categoryScores && cur.categoryScores[idx]) || 0), 0) / totalParticipants)
+          : 0;
+        const pct = Math.min(100, (avgCat / 15) * 100);
+        let barCol = "bg-emerald-500";
+        if (avgCat >= 9) barCol = "bg-rose-500";
+        else if (avgCat >= 4) barCol = "bg-amber-500";
+
+        return `
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="font-bold text-slate-800">${cat.title}</span>
+              <span class="font-extrabold text-slate-900">평균 ${avgCat.toFixed(1)} <span class="text-slate-400 font-normal">/ 15점</span></span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full ${barCol} rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 참여자별 상세 목록 렌더링 (위험도 높은 순)
+      const sortedParticipants = [...filteredData].sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
+      document.getElementById('participant-count-badge').textContent = `${sortedParticipants.length}명`;
+
+      const listContainer = document.getElementById('participant-list-container');
+      if (sortedParticipants.length === 0) {
+        listContainer.innerHTML = `
+          <div class="py-10 text-center text-sm text-slate-400">
+            표시할 참여자 데이터가 없습니다.
+          </div>
+        `;
+        return;
+      }
+
+      listContainer.innerHTML = sortedParticipants.map(person => {
+        const score = person.totalScore || 0;
+        let levelBadge = `<span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-700">우수 (${score}점)</span>`;
+        if (score >= 39) {
+          levelBadge = `<span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-rose-100 text-rose-700">집중관리 (${score}점)</span>`;
+        } else if (score >= 16) {
+          levelBadge = `<span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-100 text-amber-800">점검필요 (${score}점)</span>`;
+        }
+
+        const catMiniBadges = (person.categoryScores || [0,0,0,0,0]).map((cScore, cIdx) => {
+          return `<span class="text-[11px] px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">${CATEGORIES[cIdx].shortTitle.split('. ')[1]} <strong>${cScore}</strong></span>`;
+        }).join('');
+
+        return `
+          <div class="p-4 rounded-2xl border border-slate-200 hover:border-slate-300 transition space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-lg bg-brand-50 text-brand-700 text-xs font-extrabold">${escapeHtml(person.org || '미지정')}</span>
+                <span class="font-extrabold text-slate-900 text-sm sm:text-base">${escapeHtml(person.name || '익명')}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                ${person.focusQuestion ? `<span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-md">목표: ${person.focusQuestion}번</span>` : ''}
+                ${levelBadge}
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              ${catMiniBadges}
+            </div>
+            ${person.pledge ? `
+              <div class="bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-700 flex items-start gap-2 border border-slate-100">
+                <i class="fa-solid fa-quote-left text-brand-400 mt-0.5"></i>
+                <span class="font-medium">${escapeHtml(person.pledge)}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    };
+
+    function exportDashboardCSV() {
+      const allData = Array.isArray(window.allSubmissions) ? window.allSubmissions : [];
+      if (allData.length === 0) {
+        showToast("다운로드할 진단 데이터가 없습니다.");
+        return;
+      }
+
+      const headers = ["소속조직", "이름/별명", "총점(75점)", "1.수집·동의(15)", "2.이용·공유(15)", "3.보관·통제(15)", "4.파기·정리(15)", "5.디지털·대응(15)", "중점개선문항", "실천다짐"];
+      const rows = allData.map(d => {
+        const cs = d.categoryScores || [0, 0, 0, 0, 0];
+        return [
+          `"${(d.org || '').replace(/"/g, '""')}"`,
+          `"${(d.name || '').replace(/"/g, '""')}"`,
+          d.totalScore || 0,
+          cs[0] || 0,
+          cs[1] || 0,
+          cs[2] || 0,
+          cs[3] || 0,
+          cs[4] || 0,
+          d.focusQuestion ? `${d.focusQuestion}번` : "",
+          `"${(d.pledge || '').replace(/"/g, '""')}"`
+        ].join(",");
+      });
+
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `개인정보보호_셀프진단_결과_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("엑셀(CSV) 파일이 다운로드되었습니다.");
+    }
+
+    function confirmClearAllSubmissions() {
+      showModal({
+        icon: "fa-trash-can",
+        title: "전체 참여자 데이터를 초기화할까요?",
+        desc: "대시보드에 집계된 모든 조직과 수강생의 진단 기록이 삭제됩니다.",
+        buttons: [
+          { text: "취소", style: "secondary", action: closeModal },
+          {
+            text: "전체 삭제",
+            style: "danger",
+            action: () => {
+              closeModal();
+              if (typeof window.deleteAllSubmissionsFromCloud === 'function') {
+                window.deleteAllSubmissionsFromCloud();
+              }
+              showToast("모든 대시보드 데이터가 초기화되었습니다.");
+            }
+          }
+        ]
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // =========================================================================
+    // 6. 유틸리티 (샘플 데이터, 복사, 초기화 모달, 토스트)
+    // =========================================================================
+    function fillDemoAnswers() {
+      // 4지 선다(0~3점) 기준 현실적인 분포의 샘플 응답 생성
+      const sample = [
+        1, 0, 2, 0, 0, // 1영역: 3점
+        1, 0, 2, 0, 1, // 2영역: 4점
+        3, 2, 1, 0, 0, // 3영역: 6점
+        3, 2, 0, 1, 0, // 4영역: 6점
+        2, 3, 0, 0, 0  // 5영역: 5점 (총 24점)
+      ];
+      const orgInput = document.getElementById('user-org-input').value.trim();
+      const nameInput = document.getElementById('user-name-input').value.trim();
+      userOrg = orgInput || "인사총무팀(샘플)";
+      userName = nameInput || "김보안(체험)";
+      currentSubmissionId = crypto.randomUUID();
+
+      answers = [...sample];
+      selectedFocusQuestion = null;
+      updateProgress();
+      renderResults();
+      showToast("샘플 응답 데이터(총 24점)로 진단 결과를 표시했습니다.");
+    }
+
+    function copyResultSummary() {
+      const totalScore = answers.reduce((acc, cur) => acc + cur, 0);
+      const pledge = document.getElementById('action-pledge').value.trim();
+
+      const catLines = CATEGORIES.map((cat, idx) => {
+        const sum = answers.slice(idx * 5, idx * 5 + 5).reduce((a, b) => a + b, 0);
+        return `- ${cat.shortTitle}: ${sum}/15점`;
+      }).join('\n');
+
+      const summaryText = [
+        `[개인정보 보호 습관 셀프 진단 결과]`,
+        `• 소속 / 이름: ${userOrg || '미지정'} / ${userName || '익명'}`,
+        `• 총점: ${totalScore} / 75점`,
+        catLines,
+        selectedFocusQuestion ? `• 최우선 개선 문항: ${selectedFocusQuestion}번` : '',
+        pledge ? `• 나의 실천 다짐: ${pledge}` : ''
+      ].filter(Boolean).join('\n');
+
+      const textarea = document.createElement('textarea');
+      textarea.value = summaryText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast("진단 결과 요약이 클립보드에 복사되었습니다!");
+      } catch (err) {
+        showToast("복사에 실패했습니다. 화면을 캡처해 공유해 주세요.");
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function openResetModal() {
+      showModal({
+        icon: "fa-rotate-right",
+        title: "진단을 처음부터 다시 시작할까요?",
+        desc: "현재까지 선택한 모든 응답과 결과 내용이 초기화됩니다.",
+        buttons: [
+          { text: "취소", style: "secondary", action: closeModal },
+          {
+            text: "초기화하기",
+            style: "danger",
+            action: () => {
+              closeModal();
+              answers = new Array(25).fill(null);
+              selectedFocusQuestion = null;
+              currentStep = 0;
+              document.getElementById('action-pledge').value = '';
+              updateProgress();
+              document.getElementById('quiz-section').classList.add('hidden');
+              document.getElementById('result-section').classList.add('hidden');
+              document.getElementById('instructor-section').classList.add('hidden');
+              document.getElementById('intro-section').classList.remove('hidden');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              showToast("진단이 초기화되었습니다.");
+            }
+          }
+        ]
+      });
+    }
+
+    function showModal({ icon, title, desc, buttons }) {
+      document.getElementById('modal-icon').className = `fa-solid ${icon}`;
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-desc').textContent = desc;
+
+      const actionsEl = document.getElementById('modal-actions');
+      actionsEl.innerHTML = '';
+
+      buttons.forEach(btn => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = btn.text;
+        b.onclick = btn.action;
+
+        if (btn.style === 'primary') {
+          b.className = "px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold transition";
+        } else if (btn.style === 'danger') {
+          b.className = "px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold transition";
+        } else {
+          b.className = "px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold transition";
+        }
+        actionsEl.appendChild(b);
+      });
+
+      const modal = document.getElementById('custom-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('custom-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-4');
+      }, 2600);
+    }
+  </script>
+</body>
+</html>
